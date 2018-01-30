@@ -1,0 +1,14 @@
+material Custom/face
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture kate.jpg
+			}
+		}
+	}
+}
+

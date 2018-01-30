@@ -1,0 +1,61 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lizi_robot" description="lizi Robot">
+
+  <xacro:macro name="sensor_senz3d" params="parent name *origin v_offset_x v_offset_y v_offset_z">
+      <joint name="${name}_joint" type="fixed">
+        <insert_block name="origin"/>
+        <parent link="${parent}"/>
+        <child link="${name}_link"/>
+      </joint>
+      <link name="${name}_link">
+        <visual>
+          <origin xyz="${-0.01-v_offset_x} ${0.0-v_offset_y} ${0.0-v_offset_z}" rpy="${-M_PI/2} -${M_PI} ${-M_PI/2}"/>
+          <geometry>
+            <!-- As we don't have a Senz3D mesh, use a deformed Asus Xtion Pro instead -->
+            <mesh filename="package://armadillo2_gazebo/models/softkinetic_camera_ds325/softkinetic_camera_ds325.STL" />
+          </geometry>
+          <material name="black"/>
+        </visual>
+        <collision>
+          <origin xyz="${-0.01-v_offset_x} ${0.0-v_offset_y} ${0.0-v_offset_z}" rpy="0 0 0"/>
+          <geometry>
+          <box size="0.04 0.11 0.04"/>
+        </geometry>
+        </collision>
+        <inertial>
+          <mass value="0.271"/>
+          <origin xyz="0 0 0"/>
+          <inertia ixx="0.000309392" ixy="0.0" ixz="0.0"
+                   iyy="0.000072267" iyz="0.0"
+                   izz="0.000309392"/>
+        </inertial>
+      </link>
+
+      <!-- Add frames for RGB and depth optical axes -->
+      <joint name="${name}_rgb_joint" type="fixed">
+        <origin xyz="0.0 0.0125 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="${name}_link"/>
+        <child link="${name}_rgb_frame"/>
+      </joint>
+      <link name="${name}_rgb_frame"/>
+      <joint name="${name}_rgb_optical_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="${-M_PI/2} 0.0 ${-M_PI/2}"/>
+        <parent link="${name}_rgb_frame"/>
+        <child link="${name}_rgb_optical_frame"/>
+      </joint>
+      <link name="${name}_rgb_optical_frame"/>
+      
+      <joint name="${name}_depth_joint" type="fixed">
+        <origin xyz="0.0 -0.0125 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="${name}_link"/>
+        <child link="${name}_depth_frame"/>
+      </joint>
+      <link name="${name}_depth_frame"/>
+      <joint name="${name}_depth_optical_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="${-M_PI/2} 0.0 ${-M_PI/2}"/>
+        <parent link="${name}_depth_frame"/>
+        <child link="${name}_depth_optical_frame"/>
+      </joint>
+      <link name="${name}_depth_optical_frame"/>
+    </xacro:macro>
+
+</robot>
